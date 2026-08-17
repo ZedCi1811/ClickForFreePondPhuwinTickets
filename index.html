@@ -79,52 +79,190 @@
             display: none;
         }
 
-        /* Fake error popup */
+        /* =========================
+           SCARY FAKE HACK POPUP
+           ========================= */
+
         #fakeError {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(0, 0, 0, 0.92);
             justify-content: center;
             align-items: center;
-            z-index: 999;
+            z-index: 9999;
+            animation: screenFlash 0.15s;
         }
 
         .errorBox {
-            background: #f5f5f5;
-            color: #222;
-            width: 330px;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            background: #080808;
+            color: #ff3333;
+            width: 90vw;
+            height: 85vh;
+            max-width: 1100px;
+            padding: 40px;
+            border: 3px solid #ff2222;
+            border-radius: 5px;
+
+            box-shadow:
+                0 0 20px #ff0000,
+                0 0 60px rgba(255, 0, 0, 0.5),
+                inset 0 0 40px rgba(255, 0, 0, 0.08);
+
             text-align: left;
-            font-family: Arial, sans-serif;
+            font-family: "Courier New", monospace;
+            position: relative;
+            overflow: hidden;
+
+            animation: shake 0.12s infinite alternate;
+            box-sizing: border-box;
+        }
+
+        /* Scanlines */
+        .errorBox::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(255, 0, 0, 0.05),
+                rgba(255, 0, 0, 0.05) 1px,
+                transparent 1px,
+                transparent 5px
+            );
         }
 
         .errorTitle {
-            color: #d32f2f;
+            color: #ff1a1a;
             font-weight: bold;
-            font-size: 20px;
-            margin-bottom: 15px;
+            font-size: clamp(28px, 5vw, 60px);
+            margin-bottom: 30px;
+
+            text-shadow:
+                0 0 5px red,
+                0 0 15px red,
+                0 0 30px red;
+
+            animation: glitch 0.25s infinite;
         }
 
         .errorText {
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: clamp(16px, 2vw, 25px);
+            line-height: 1.8;
+            color: #ff5555;
+
+            text-shadow:
+                0 0 8px rgba(255, 0, 0, 0.8);
+        }
+
+        .errorText b {
+            color: white;
+            font-size: 1.3em;
+
+            text-shadow:
+                0 0 10px red,
+                0 0 25px red;
+
+            animation: blink 0.5s infinite;
         }
 
         .close {
             display: block;
-            margin: 20px auto 0;
-            background: #d32f2f;
+            margin: 40px auto 0;
+
+            background: #b00000;
             color: white;
-            padding: 8px 20px;
-            border-radius: 5px;
+
+            border: 2px solid #ff4444;
+            padding: 14px 45px;
+            border-radius: 4px;
+
+            font-family: "Courier New", monospace;
+            font-size: 18px;
+            cursor: pointer;
+
+            box-shadow:
+                0 0 15px rgba(255, 0, 0, 0.7);
         }
 
-        #status {
-            margin-top: 20px;
-            font-size: 14px;
+        .close:hover {
+            background: #ff0000;
+            transform: scale(1.08);
+        }
+
+        /* Screen flash */
+        @keyframes screenFlash {
+            0% {
+                background: white;
+            }
+
+            100% {
+                background: rgba(0, 0, 0, 0.92);
+            }
+        }
+
+        /* Slight shaking */
+        @keyframes shake {
+            from {
+                transform: translate(-1px, 1px);
+            }
+
+            to {
+                transform: translate(1px, -1px);
+            }
+        }
+
+        /* Glitch */
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 2px);
+            }
+
+            40% {
+                transform: translate(3px, -2px);
+            }
+
+            60% {
+                transform: translate(-2px, -1px);
+            }
+
+            80% {
+                transform: translate(2px, 1px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        /* Blinking */
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.2;
+            }
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 600px) {
+            .errorBox {
+                width: 94vw;
+                height: 90vh;
+                padding: 25px;
+            }
+
+            .errorText {
+                line-height: 1.5;
+            }
         }
     </style>
 </head>
@@ -135,13 +273,17 @@
 
         <!-- FIRST QUESTION -->
         <div id="questionSection">
-            <h1>Wanna watch something with me? 🎬</h1>
+
+            <h1>
+                Wanna watch something with me? 🎬
+            </h1>
 
             <p>
                 Just you and me... maybe? 👀
             </p>
 
             <div class="buttons">
+
                 <button class="yes" onclick="sayYes()">
                     Yes 💗
                 </button>
@@ -149,16 +291,22 @@
                 <button class="no" id="noButton" onclick="moveNo()">
                     No 😭
                 </button>
+
             </div>
+
         </div>
 
 
         <!-- MOVIE CHOICES -->
         <div id="movieSection">
 
-            <h1>YAYYY 💗</h1>
+            <h1>
+                YAYYY 💗
+            </h1>
 
-            <p>Okay, what do you wanna watch?</p>
+            <p>
+                Okay, what do you wanna watch?
+            </p>
 
             <div class="buttons">
 
@@ -187,24 +335,42 @@
     </div>
 
 
-    <!-- FAKE HACK POPUP -->
+    <!-- =========================
+         FAKE HACK POPUP
+         ========================= -->
+
     <div id="fakeError">
 
         <div class="errorBox">
 
             <div class="errorTitle">
-                ⚠ SYSTEM ERROR
+                ⚠ CRITICAL SYSTEM ERROR
             </div>
 
             <div class="errorText">
-                Error. Error. Error.<br><br>
 
-                Unauthorized movie selection detected.<br>
-                Security protocol activated.<br><br>
+                &gt; SYSTEM BREACH DETECTED<br>
+                &gt; UNAUTHORIZED MOVIE SELECTION<br>
+                &gt; SECURITY PROTOCOL: ACTIVE<br><br>
 
-                <b>You have been hacked.</b><br><br>
+                <b>
+                    ⚠ YOUR DEVICE HAS BEEN HACKED ⚠
+                </b>
 
-                Message Shane immediately.
+                <br><br>
+
+                Tracking connection...<br>
+                Accessing system files...<br>
+                Uploading personal data...<br><br>
+
+                <b>
+                    JUST KIDDING 😭
+                </b>
+
+                <br><br>
+
+                You really thought I'd let you choose a movie?
+
             </div>
 
             <button class="close" onclick="closeError()">
@@ -223,11 +389,27 @@
 
             const button = document.getElementById("noButton");
 
-            const maxX = window.innerWidth - button.offsetWidth - 20;
-            const maxY = window.innerHeight - button.offsetHeight - 20;
+            const maxX =
+                window.innerWidth -
+                button.offsetWidth -
+                20;
 
-            const randomX = Math.max(10, Math.random() * maxX);
-            const randomY = Math.max(10, Math.random() * maxY);
+            const maxY =
+                window.innerHeight -
+                button.offsetHeight -
+                20;
+
+            const randomX =
+                Math.max(
+                    10,
+                    Math.random() * maxX
+                );
+
+            const randomY =
+                Math.max(
+                    10,
+                    Math.random() * maxY
+                );
 
             button.style.position = "fixed";
             button.style.left = randomX + "px";
@@ -238,23 +420,27 @@
         // When she clicks Yes
         function sayYes() {
 
-            document.getElementById("questionSection").style.display = "none";
+            document.getElementById("questionSection")
+                .style.display = "none";
 
-            document.getElementById("movieSection").style.display = "block";
+            document.getElementById("movieSection")
+                .style.display = "block";
         }
 
 
-        // Fake hacking message
+        // Show fake hacking screen
         function fakeHack(movie) {
 
-            document.getElementById("fakeError").style.display = "flex";
+            document.getElementById("fakeError")
+                .style.display = "flex";
         }
 
 
         // Close fake error
         function closeError() {
 
-            document.getElementById("fakeError").style.display = "none";
+            document.getElementById("fakeError")
+                .style.display = "none";
         }
 
     </script>
